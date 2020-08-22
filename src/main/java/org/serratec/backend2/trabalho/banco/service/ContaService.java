@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.serratec.backend2.trabalho.banco.domain.Conta;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ContaService {
+	
+	@Autowired
+	private OperacaoService operacaoService;
 
 	private List<Conta> banco;
 	private int nextnumero;
@@ -68,6 +72,21 @@ public class ContaService {
 			return true;
 		}
 
+	}
+	
+
+	
+	public Double operacao(String operacao, Double valor, Integer numero) {
+		Conta conta = recuperarPorNumero(numero);
+		switch (operacao) {
+		case "debito":
+			return operacaoService.debito(conta, valor);
+		case "credito":
+			return operacaoService.credito(conta, valor);
+			
+		default:
+			return null;
+		}
 	}
 	
 }
