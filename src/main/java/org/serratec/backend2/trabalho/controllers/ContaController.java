@@ -17,8 +17,8 @@ public class ContaController {
 	private ContaService contaService;
 
 	@GetMapping
-	public List<Conta> listConta(){
-		return contaService.listaConta();
+	public ResponseEntity<?> listConta(){
+		return ResponseEntity.ok(contaService.listaConta());
 	}
 	
 	
