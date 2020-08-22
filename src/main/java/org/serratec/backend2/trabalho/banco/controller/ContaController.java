@@ -1,8 +1,11 @@
 package org.serratec.backend2.trabalho.banco.controller;
 
 import org.serratec.backend2.trabalho.banco.domain.Conta;
+import org.serratec.backend2.trabalho.banco.exceptions.AccountNotFoundException;
+import org.serratec.backend2.trabalho.banco.exceptions.InsufficientFundsException;
+import org.serratec.backend2.trabalho.banco.exceptions.InvalidNumberException;
+import org.serratec.backend2.trabalho.banco.exceptions.NotAllowedCreditException;
 import org.serratec.backend2.trabalho.banco.service.ContaService;
-import org.serratec.backend2.trabalho.banco.service.OperacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +26,13 @@ public class ContaController {
 	@Autowired
 	private ContaService contaService;
 
-	@Autowired
-	private OperacaoService operacaoService;
-
 	@GetMapping
 	public ResponseEntity<?> listar() {
 		return ResponseEntity.ok(contaService.listaConta());
 	}
 
 	@GetMapping("/{numero}")
-	public ResponseEntity<?> pegaPorNumero(@PathVariable Integer numero) {
+	public ResponseEntity<?> pegaPorNumero(@PathVariable Integer numero) throws InvalidNumberException, AccountNotFoundException {
 		return ResponseEntity.ok(contaService.recuperarPorNumero(numero));
 	}
 	
@@ -42,13 +42,13 @@ public class ContaController {
 	}
 
 	@PutMapping("/{numero}")
-	public ResponseEntity<?> atualizarConta(@PathVariable Integer numero, @RequestBody Conta conta) {
+	public ResponseEntity<?> atualizarConta(@PathVariable Integer numero, @RequestBody Conta conta) throws InvalidNumberException, AccountNotFoundException {
 		Conta contaAtualizada = contaService.atualizarConta(conta, numero);
 		return ResponseEntity.ok(contaAtualizada);
 	}
 
 	@DeleteMapping("/{numero}")
-	public ResponseEntity<?> apagarConta(@PathVariable Integer numero) {
+	public ResponseEntity<?> apagarConta(@PathVariable Integer numero) throws InvalidNumberException, AccountNotFoundException {
 		if (contaService.apagarConta(numero) == true) {
 			return ResponseEntity.ok("Conta apagada com sucesso!!");
 		}
@@ -57,7 +57,7 @@ public class ContaController {
 
 	@PostMapping("/{numero}/{operacao}")
 	public ResponseEntity<?> operacao(@PathVariable("numero") Integer numero, @PathVariable("operacao") String operacao,
-			@RequestParam Double valor) {
+			@RequestParam Double valor) throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException, NotAllowedCreditException {
 		return ResponseEntity.ok(contaService.operacao(operacao, valor, numero));
 	}
 

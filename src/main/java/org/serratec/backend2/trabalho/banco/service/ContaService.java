@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.serratec.backend2.trabalho.banco.domain.Conta;
+import org.serratec.backend2.trabalho.banco.exceptions.AccountNotFoundException;
+import org.serratec.backend2.trabalho.banco.exceptions.InsufficientFundsException;
+import org.serratec.backend2.trabalho.banco.exceptions.InvalidNumberException;
+import org.serratec.backend2.trabalho.banco.exceptions.NotAllowedCreditException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,18 +28,26 @@ public class ContaService {
 		banco.add(new Conta(4, "João Bizerra", 500.00));
 		nextnumero = 5;
 	}
+	
+	private void validarNumero(Integer numero) throws InvalidNumberException {
+		if(numero <= 0) {
+			throw new InvalidNumberException(numero);
+		}
+		
+	}
 
 	public List<Conta> listaConta() {
 		return banco;
 	}
 
-	public Conta recuperarPorNumero(Integer numero) {
+	public Conta recuperarPorNumero(Integer numero) throws InvalidNumberException, AccountNotFoundException {
+		validarNumero(numero);
 		for (Conta conta : banco) {
 			if (conta.getNumero().equals(numero)) {
 				return conta;
 			}
 		}
-		return null;
+		throw new AccountNotFoundException(numero);
 	}
 
 	public Conta adicionar(Conta conta) {
@@ -46,7 +58,7 @@ public class ContaService {
 
 	}
 
-	public Conta atualizarConta(Conta conta, Integer numero) {
+	public Conta atualizarConta(Conta conta, Integer numero) throws InvalidNumberException, AccountNotFoundException {
 		Conta contaAntiga = recuperarPorNumero(numero);
 
 		if (!(null == conta.getTitular()) && !"".equals(conta.getTitular())) {
@@ -62,7 +74,7 @@ public class ContaService {
 		return contaAtualizada;
 	}
 
-	public boolean apagarConta(Integer numero) {
+	public boolean apagarConta(Integer numero) throws InvalidNumberException, AccountNotFoundException {
 
 		Conta conta = recuperarPorNumero(numero);
 		if (conta == null) {
@@ -74,9 +86,7 @@ public class ContaService {
 
 	}
 	
-
-	
-	public Double operacao(String operacao, Double valor, Integer numero) {
+	public Double operacao(String operacao, Double valor, Integer numero) throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException, NotAllowedCreditException {
 		Conta conta = recuperarPorNumero(numero);
 		switch (operacao) {
 		case "debito":
@@ -88,5 +98,4 @@ public class ContaService {
 			return null;
 		}
 	}
-	
 }
