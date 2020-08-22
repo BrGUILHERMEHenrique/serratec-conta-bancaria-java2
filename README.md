@@ -9,3 +9,5 @@
 :boy: <a href="https://github.com/BrGUILHERMEHenrique">Guilherme Henrique </a></br>
 :boy: <a href="https://github.com/TonyMEsteves">Tony</a></br>
 :boy: <a href="https://github.com/PauloDudu">Paulo Eduardo</a></br>
+
+Como usar: use  uma porta  9090.
