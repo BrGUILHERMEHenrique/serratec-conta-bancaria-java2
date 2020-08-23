@@ -32,23 +32,26 @@ public class ContaController {
 	}
 
 	@GetMapping("/{numero}")
-	public ResponseEntity<?> pegaPorNumero(@PathVariable Integer numero) throws InvalidNumberException, AccountNotFoundException {
+	public ResponseEntity<?> pegaPorNumero(@PathVariable Integer numero)
+			throws InvalidNumberException, AccountNotFoundException {
 		return ResponseEntity.ok(contaService.recuperarPorNumero(numero));
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<?> adcionarConta(@RequestBody Conta conta) {
 		return ResponseEntity.ok(contaService.adicionar(conta));
 	}
 
 	@PutMapping("/{numero}")
-	public ResponseEntity<?> atualizarConta(@PathVariable Integer numero, @RequestBody Conta conta) throws InvalidNumberException, AccountNotFoundException {
+	public ResponseEntity<?> atualizarConta(@PathVariable Integer numero, @RequestBody Conta conta)
+			throws InvalidNumberException, AccountNotFoundException {
 		Conta contaAtualizada = contaService.atualizarConta(conta, numero);
 		return ResponseEntity.ok(contaAtualizada);
 	}
 
 	@DeleteMapping("/{numero}")
-	public ResponseEntity<?> apagarConta(@PathVariable Integer numero) throws InvalidNumberException, AccountNotFoundException {
+	public ResponseEntity<?> apagarConta(@PathVariable Integer numero)
+			throws InvalidNumberException, AccountNotFoundException {
 		if (contaService.apagarConta(numero) == true) {
 			return ResponseEntity.ok("Conta apagada com sucesso!!");
 		}
@@ -57,7 +60,8 @@ public class ContaController {
 
 	@PostMapping("/{numero}/{operacao}")
 	public ResponseEntity<?> operacao(@PathVariable("numero") Integer numero, @PathVariable("operacao") String operacao,
-			@RequestParam Double valor) throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException, NotAllowedCreditException {
+			@RequestParam Double valor) throws InvalidNumberException, AccountNotFoundException,
+			InsufficientFundsException, NotAllowedCreditException {
 		return ResponseEntity.ok(contaService.operacao(operacao, valor, numero));
 	}
 
