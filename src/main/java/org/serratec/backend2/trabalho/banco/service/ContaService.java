@@ -43,7 +43,7 @@ public class ContaService {
 	public Conta recuperarPorNumero(Integer numero) throws InvalidNumberException, AccountNotFoundException {
 		validarNumero(numero);
 		for (Conta conta : banco) {
-			if (conta.getNumero().equals(numero)) {
+			if (numero == conta.getNumero()) {
 				return conta;
 			}
 		}
