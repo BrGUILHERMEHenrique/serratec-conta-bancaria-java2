@@ -18,13 +18,9 @@ public class OperacaoService {
 		}
 	}
 	
-	public Conta credito(Conta conta, Double valor) throws NotAllowedCreditException, InsufficientFundsException {
+	public Conta credito(Conta conta, Double valor) throws NotAllowedCreditException{
 		if(valor >= 50) {
-			if(conta.getSaldo() < valor) {
-				throw new InsufficientFundsException(conta.getSaldo(), valor);
-			} else {
-				conta.setSaldo(conta.getSaldo() - valor);
-			}
+			conta.setSaldo(conta.getSaldo() + valor);
 		} else {
 			throw new NotAllowedCreditException(valor);
 		}
