@@ -74,16 +74,9 @@ public class ContaService {
 		return contaAtualizada;
 	}
 
-	public boolean apagarConta(Integer numero) throws InvalidNumberException, AccountNotFoundException {
-
+	public void apagarConta(Integer numero) throws InvalidNumberException, AccountNotFoundException {
 		Conta conta = recuperarPorNumero(numero);
-		if (conta == null) {
-			return false;
-		} else {
 			banco.remove(conta);
-			return true;
-		}
-
 	}
 	
 	public Conta operacao(String operacao, Double valor, Integer numero) throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException, NotAllowedCreditException {

@@ -52,8 +52,8 @@ public class ContaController {
 	@DeleteMapping("/{numero}")
 	public ResponseEntity<?> apagarConta(@PathVariable Integer numero)
 			throws InvalidNumberException, AccountNotFoundException {
-			contaService.apagarConta(numero);
-			return ResponseEntity.ok("Conta apagada com sucesso!!");
+		contaService.apagarConta(numero);
+		return ResponseEntity.ok("Conta apagada com sucesso!!");
 	}
 
 	@PostMapping("/{numero}/{operacao}")
