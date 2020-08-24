@@ -65,7 +65,7 @@ public class ContaService {
 			contaAntiga.setTitular(conta.getTitular());
 
 		}
-		if (!(null == conta.getNumero()) && !"".equals(conta.getNumero())) {
+		if (!(null == conta.getNumero()) && conta.getNumero() > 0) {
 			contaAntiga.setNumero(conta.getNumero());
 		}
 
@@ -86,7 +86,7 @@ public class ContaService {
 
 	}
 	
-	public Double operacao(String operacao, Double valor, Integer numero) throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException, NotAllowedCreditException {
+	public Conta operacao(String operacao, Double valor, Integer numero) throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException, NotAllowedCreditException {
 		Conta conta = recuperarPorNumero(numero);
 		switch (operacao) {
 		case "debito":

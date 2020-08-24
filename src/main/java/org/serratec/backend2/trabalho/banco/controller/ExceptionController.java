@@ -43,7 +43,7 @@ public class ExceptionController {
 	@ExceptionHandler(InsufficientFundsException.class)
 	public ResponseEntity<String> tratarInsuficientFundsExceptions(InsufficientFundsException exception) {
 		String msg = String.format("O saldo da conta passada não tem fundos suficientes para a operação");
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+		return ResponseEntity.badRequest()
 				.header("x-insufficientfund-msg", msg)
 				.header("x-insufficientfund-code", "INSUFFICIENT_FUNDS")
 				.header("x-insufficientfunds-value", exception.getValor().toString())

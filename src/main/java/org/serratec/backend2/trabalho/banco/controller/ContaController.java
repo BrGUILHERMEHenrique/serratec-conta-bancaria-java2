@@ -39,7 +39,7 @@ public class ContaController {
 
 	@PostMapping
 	public ResponseEntity<?> adcionarConta(@RequestBody Conta conta) {
-		return ResponseEntity.ok(contaService.adicionar(conta));
+		return ResponseEntity.status(HttpStatus.CREATED).body(contaService.adicionar(conta));
 	}
 
 	@PutMapping("/{numero}")
@@ -52,17 +52,15 @@ public class ContaController {
 	@DeleteMapping("/{numero}")
 	public ResponseEntity<?> apagarConta(@PathVariable Integer numero)
 			throws InvalidNumberException, AccountNotFoundException {
-		if (contaService.apagarConta(numero) == true) {
+			contaService.apagarConta(numero);
 			return ResponseEntity.ok("Conta apagada com sucesso!!");
-		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao apagar a conta!!");
 	}
 
 	@PostMapping("/{numero}/{operacao}")
 	public ResponseEntity<?> operacao(@PathVariable("numero") Integer numero, @PathVariable("operacao") String operacao,
 			@RequestParam Double valor) throws InvalidNumberException, AccountNotFoundException,
 			InsufficientFundsException, NotAllowedCreditException {
-		return ResponseEntity.ok(contaService.operacao(operacao, valor, numero));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(contaService.operacao(operacao, valor, numero));
 	}
 
 }

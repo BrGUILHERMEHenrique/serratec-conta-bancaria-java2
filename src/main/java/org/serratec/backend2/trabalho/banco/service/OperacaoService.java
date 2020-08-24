@@ -9,16 +9,16 @@ import org.springframework.stereotype.Service;
 public class OperacaoService {
 	
 	
-	public Double debito(Conta conta, Double valor) throws InsufficientFundsException{
+	public Conta debito(Conta conta, Double valor) throws InsufficientFundsException{
 		if(conta.getSaldo() < valor) {
 			throw new InsufficientFundsException(conta.getSaldo(), valor);
 		}else {
 			conta.setSaldo(conta.getSaldo() - valor);
-			return conta.getSaldo();
+			return conta;
 		}
 	}
 	
-	public Double credito(Conta conta, Double valor) throws NotAllowedCreditException, InsufficientFundsException {
+	public Conta credito(Conta conta, Double valor) throws NotAllowedCreditException, InsufficientFundsException {
 		if(valor >= 50) {
 			if(conta.getSaldo() < valor) {
 				throw new InsufficientFundsException(conta.getSaldo(), valor);
@@ -28,6 +28,6 @@ public class OperacaoService {
 		} else {
 			throw new NotAllowedCreditException(valor);
 		}
-		return conta.getSaldo();
+		return conta;
 	}
 }
