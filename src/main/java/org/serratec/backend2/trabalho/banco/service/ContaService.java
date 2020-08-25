@@ -8,6 +8,7 @@ import org.serratec.backend2.trabalho.banco.exceptions.AccountNotFoundException;
 import org.serratec.backend2.trabalho.banco.exceptions.InsufficientFundsException;
 import org.serratec.backend2.trabalho.banco.exceptions.InvalidNumberException;
 import org.serratec.backend2.trabalho.banco.exceptions.NotAllowedCreditException;
+import org.serratec.backend2.trabalho.banco.exceptions.OperationNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,16 +80,15 @@ public class ContaService {
 			banco.remove(conta);
 	}
 	
-	public Conta operacao(String operacao, Double valor, Integer numero) throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException, NotAllowedCreditException {
+	public Conta operacao(String operacao, Double valor, Integer numero) throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException, NotAllowedCreditException, OperationNotFoundException {
 		Conta conta = recuperarPorNumero(numero);
 		switch (operacao) {
 		case "debito":
 			return operacaoService.debito(conta, valor);
 		case "credito":
 			return operacaoService.credito(conta, valor);
-			
 		default:
-			return null;
+			throw new OperationNotFoundException(operacao);
 		}
 	}
 }

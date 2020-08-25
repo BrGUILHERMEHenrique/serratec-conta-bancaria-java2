@@ -5,6 +5,7 @@ import org.serratec.backend2.trabalho.banco.exceptions.AccountNotFoundException;
 import org.serratec.backend2.trabalho.banco.exceptions.InsufficientFundsException;
 import org.serratec.backend2.trabalho.banco.exceptions.InvalidNumberException;
 import org.serratec.backend2.trabalho.banco.exceptions.NotAllowedCreditException;
+import org.serratec.backend2.trabalho.banco.exceptions.OperationNotFoundException;
 import org.serratec.backend2.trabalho.banco.service.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,7 +60,7 @@ public class ContaController {
 	@PostMapping("/{numero}/{operacao}")
 	public ResponseEntity<?> operacao(@PathVariable("numero") Integer numero, @PathVariable("operacao") String operacao,
 			@RequestParam Double valor) throws InvalidNumberException, AccountNotFoundException,
-			InsufficientFundsException, NotAllowedCreditException {
+			InsufficientFundsException, NotAllowedCreditException, OperationNotFoundException {
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(contaService.operacao(operacao, valor, numero));
 	}
 
