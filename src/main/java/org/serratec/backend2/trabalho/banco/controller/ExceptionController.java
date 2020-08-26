@@ -56,7 +56,14 @@ public class ExceptionController {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> tratarGenericException(Exception exception) {
 		String msg = String.format("Erro inesperado no servidor, se possível verifique as informaçoes passadas.");
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).header("x-generic-msg", msg)
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.header("x-generic-msg", msg)
 				.header("x-generic-code", exception.getMessage()).build();
+	}
+	@ExceptionHandler(NullPointerException.class)
+	public ResponseEntity<String> tratarNullPointerException(NullPointerException exception){
+		String msg = "ALGUM PARAMETRO OU INFORMAÇÃO ESTÁ ERRADA POR FAVOR CONFIRA A URL";
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).header("x-TITLLE-msg", msg)
+				.header("Error", exception.getMessage()).build();
 	}
 }
