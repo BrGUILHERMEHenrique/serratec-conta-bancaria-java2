@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.serratec.backend2.trabalho.banco.domain.Conta;
+import org.serratec.backend2.trabalho.banco.domain.Operacao;
 import org.serratec.backend2.trabalho.banco.exceptions.AccountNotFoundException;
 import org.serratec.backend2.trabalho.banco.exceptions.InsufficientFundsException;
 import org.serratec.backend2.trabalho.banco.exceptions.InvalidNumberException;
@@ -80,13 +81,18 @@ public class ContaService {
 			banco.remove(conta);
 	}
 	
-	public Conta operacao(String operacao, Double valor, Integer numero) throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException, NotAllowedCreditException, OperationNotFoundException {
+	public List operacao(String operacao, Double valor, Integer numero) throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException, NotAllowedCreditException, OperationNotFoundException {
 		Conta conta = recuperarPorNumero(numero);
+		Operacao operacaoClass = new Operacao();
 		switch (operacao) {
 		case "debito":
-			return operacaoService.debito(conta, valor);
+			operacaoClass.setTipo(operacao);
+			operacaoClass.setValor(valor);
+			return operacaoService.debito(conta, operacaoClass);
 		case "credito":
-			return operacaoService.credito(conta, valor);
+			operacaoClass.setTipo(operacao);
+			operacaoClass.setValor(valor);
+			return operacaoService.credito(conta, operacaoClass);
 		default:
 			throw new OperationNotFoundException(operacao);
 		}

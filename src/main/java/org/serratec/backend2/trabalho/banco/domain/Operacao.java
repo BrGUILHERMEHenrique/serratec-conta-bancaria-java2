@@ -1,5 +1,6 @@
 package org.serratec.backend2.trabalho.banco.domain;
 
+
 public class Operacao {
 	
 	private String tipo;

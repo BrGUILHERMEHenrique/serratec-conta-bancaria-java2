@@ -1,29 +1,39 @@
 package org.serratec.backend2.trabalho.banco.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.serratec.backend2.trabalho.banco.domain.Conta;
+import org.serratec.backend2.trabalho.banco.domain.Operacao;
 import org.serratec.backend2.trabalho.banco.exceptions.InsufficientFundsException;
 import org.serratec.backend2.trabalho.banco.exceptions.NotAllowedCreditException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OperacaoService {
+		
+	List atualizacoes;
 	
-	
-	public Conta debito(Conta conta, Double valor) throws InsufficientFundsException{
-		if(conta.getSaldo() < valor) {
-			throw new InsufficientFundsException(conta.getSaldo(), valor);
-		}else {
-			conta.setSaldo(conta.getSaldo() - valor);
-			return conta;
+	public List debito(Conta conta, Operacao operacao) throws InsufficientFundsException{
+		atualizacoes = new ArrayList();
+		if(conta.getSaldo() < operacao.getValor()) {
+			throw new InsufficientFundsException(conta.getSaldo(), operacao.getValor());
 		}
+		conta.setSaldo(conta.getSaldo() - operacao.getValor());
+		atualizacoes.add(conta);
+		atualizacoes.add(operacao);
+		return atualizacoes;
 	}
 	
-	public Conta credito(Conta conta, Double valor) throws NotAllowedCreditException{
-		if(valor >= 50) {
-			conta.setSaldo(conta.getSaldo() + valor);
+	public List credito(Conta conta, Operacao operacao) throws NotAllowedCreditException{
+		atualizacoes = new ArrayList();
+		if(operacao.getValor() >= 50) {
+			conta.setSaldo(conta.getSaldo() + operacao.getValor());
 		} else {
-			throw new NotAllowedCreditException(valor);
+			throw new NotAllowedCreditException(operacao.getValor());
 		}
-		return conta;
+		atualizacoes.add(conta);
+		atualizacoes.add(operacao);
+		return atualizacoes;
 	}
 }
