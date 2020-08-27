@@ -3,6 +3,7 @@ package org.serratec.backend2.trabalho.banco.domain;
 
 public class Operacao {
 	
+	// TODO Tipo de operação deveria ser um Enum
 	private String tipo;
 	private Double valor;
 	public Operacao() {

@@ -57,6 +57,14 @@ public class ContaController {
 		return ResponseEntity.ok("Conta apagada com sucesso!!");
 	}
 
+	/**
+	 *	TODO
+	 *
+	 * 		Não é elegante usarmos no mesmo mapping @PathVariable e @RequestParam.
+	 * 		Nesta caso, o mais elegante seria:
+	 * 			@PostMapping("/{numero}/{operacao}/{valor}")
+	 * 
+	 */
 	@PostMapping("/{numero}/{operacao}")
 	public ResponseEntity<?> operacao(@PathVariable("numero") Integer numero, @PathVariable("operacao") String operacao,
 			@RequestParam Double valor) throws InvalidNumberException, AccountNotFoundException,

@@ -27,6 +27,7 @@ public class OperacaoService {
 	
 	public List credito(Conta conta, Operacao operacao) throws NotAllowedCreditException{
 		atualizacoes = new ArrayList();
+		//TODO O valor deveria estar configurado no arquivo application.properties
 		if(operacao.getValor() >= 50) {
 			conta.setSaldo(conta.getSaldo() + operacao.getValor());
 		} else {

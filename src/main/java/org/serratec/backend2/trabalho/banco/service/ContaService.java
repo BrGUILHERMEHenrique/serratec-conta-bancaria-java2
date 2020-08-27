@@ -60,6 +60,12 @@ public class ContaService {
 
 	}
 
+	/**
+	 * TODO
+	 * 		Antes de atualizar o número da conta, devemos verificar se não existe outra conta 
+	 * 		com o mesmo número. Caso exista, deveríamos ter uma Exception para tratar a duplicidade
+	 * 		de número de contas.
+	 */
 	public Conta atualizarConta(Conta conta, Integer numero) throws InvalidNumberException, AccountNotFoundException {
 		Conta contaAntiga = recuperarPorNumero(numero);
 
@@ -71,8 +77,18 @@ public class ContaService {
 			contaAntiga.setNumero(conta.getNumero());
 		}
 
+		/**
+		 * FIXME 
+		 * 		Esta lógica semanticamente está um pouco "confusa".
+		 * 		Não seria melhor criar o objeto com o nome "contaAtualizada" 
+		 * 		e depois dos sets para modificar as propriedades retornar o objeto?
+		 * 
+		 *  	Foi criado uma nova instância apenas para dar um novo nome ao objeto, 
+		 *  	pois nenhuma operação é realizada nele antes de retorná-lo na função 
+		 *  
+		 */
 		Conta contaAtualizada = contaAntiga;
-
+		
 		return contaAtualizada;
 	}
 
@@ -81,6 +97,7 @@ public class ContaService {
 			banco.remove(conta);
 	}
 	
+	//TODO NÃO PERMITIR FAZER UMA OPERAÇÃO COM VALOR 0
 	public List operacao(String operacao, Double valor, Integer numero) throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException, NotAllowedCreditException, OperationNotFoundException {
 		Conta conta = recuperarPorNumero(numero);
 		Operacao operacaoClass = new Operacao();
