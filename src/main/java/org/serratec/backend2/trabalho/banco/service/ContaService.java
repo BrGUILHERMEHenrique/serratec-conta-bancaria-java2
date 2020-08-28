@@ -5,17 +5,20 @@ import java.util.List;
 
 import org.serratec.backend2.trabalho.banco.domain.Conta;
 import org.serratec.backend2.trabalho.banco.domain.Operacao;
+import org.serratec.backend2.trabalho.banco.domain.TipoOperacao;
 import org.serratec.backend2.trabalho.banco.exceptions.AccountNotFoundException;
+import org.serratec.backend2.trabalho.banco.exceptions.DuplicateAccountException;
 import org.serratec.backend2.trabalho.banco.exceptions.InsufficientFundsException;
 import org.serratec.backend2.trabalho.banco.exceptions.InvalidNumberException;
 import org.serratec.backend2.trabalho.banco.exceptions.NotAllowedCreditException;
+import org.serratec.backend2.trabalho.banco.exceptions.NotAlowedValueException;
 import org.serratec.backend2.trabalho.banco.exceptions.OperationNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ContaService {
-	
+
 	@Autowired
 	private OperacaoService operacaoService;
 
@@ -30,12 +33,12 @@ public class ContaService {
 		banco.add(new Conta(4, "João Bizerra", 500.00));
 		nextnumero = 5;
 	}
-	
+
 	private void validarNumero(Integer numero) throws InvalidNumberException {
-		if(numero <= 0) {
+		if (numero <= 0) {
 			throw new InvalidNumberException(numero);
 		}
-		
+
 	}
 
 	public List<Conta> listaConta() {
@@ -61,53 +64,67 @@ public class ContaService {
 	}
 
 	/**
-	 * TODO
-	 * 		Antes de atualizar o número da conta, devemos verificar se não existe outra conta 
-	 * 		com o mesmo número. Caso exista, deveríamos ter uma Exception para tratar a duplicidade
-	 * 		de número de contas.
+	 * TODO Antes de atualizar o número da conta, devemos verificar se não existe
+	 * outra conta com o mesmo número. Caso exista, deveríamos ter uma Exception
+	 * para tratar a duplicidade de número de contas.
+	 * 
+	 * FEITO
+	 * 
+	 * @throws DuplicateAccountException
 	 */
-	public Conta atualizarConta(Conta conta, Integer numero) throws InvalidNumberException, AccountNotFoundException {
-		Conta contaAntiga = recuperarPorNumero(numero);
+	public Conta atualizarConta(Conta conta, Integer numero)
+			throws InvalidNumberException, AccountNotFoundException, DuplicateAccountException {
+		Conta contaAtualizada = recuperarPorNumero(numero);
+		if (!(null == conta.getNumero()) && conta.getNumero() > 0) {
+			for (Conta c : banco) {
+				if (c.getNumero() == conta.getNumero()) {
+					throw new DuplicateAccountException();
+				}
+			}
+			contaAtualizada.setNumero(conta.getNumero());
+		}
 
 		if (!(null == conta.getTitular()) && !"".equals(conta.getTitular())) {
-			contaAntiga.setTitular(conta.getTitular());
+			contaAtualizada.setTitular(conta.getTitular());
 
-		}
-		if (!(null == conta.getNumero()) && conta.getNumero() > 0) {
-			contaAntiga.setNumero(conta.getNumero());
 		}
 
 		/**
-		 * FIXME 
-		 * 		Esta lógica semanticamente está um pouco "confusa".
-		 * 		Não seria melhor criar o objeto com o nome "contaAtualizada" 
-		 * 		e depois dos sets para modificar as propriedades retornar o objeto?
+		 * FIXME Esta lógica semanticamente está um pouco "confusa". Não seria melhor
+		 * criar o objeto com o nome "contaAtualizada" e depois dos sets para modificar
+		 * as propriedades retornar o objeto?
 		 * 
-		 *  	Foi criado uma nova instância apenas para dar um novo nome ao objeto, 
-		 *  	pois nenhuma operação é realizada nele antes de retorná-lo na função 
-		 *  
+		 * Foi criado uma nova instância apenas para dar um novo nome ao objeto, pois
+		 * nenhuma operação é realizada nele antes de retorná-lo na função
+		 * 
+		 * FEITO
+		 * 
 		 */
-		Conta contaAtualizada = contaAntiga;
-		
+
 		return contaAtualizada;
 	}
 
 	public void apagarConta(Integer numero) throws InvalidNumberException, AccountNotFoundException {
 		Conta conta = recuperarPorNumero(numero);
-			banco.remove(conta);
+		banco.remove(conta);
 	}
-	
-	//TODO NÃO PERMITIR FAZER UMA OPERAÇÃO COM VALOR 0
-	public List operacao(String operacao, Double valor, Integer numero) throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException, NotAllowedCreditException, OperationNotFoundException {
+
+	// TODO NÃO PERMITIR FAZER UMA OPERAÇÃO COM VALOR 0 FEITO
+	public List operacao(String operacao, Double valor, Integer numero)
+			throws InvalidNumberException, AccountNotFoundException, InsufficientFundsException,
+			NotAllowedCreditException, OperationNotFoundException, NotAlowedValueException {
+		if (valor <= 0) {
+			throw new NotAlowedValueException();
+		}
 		Conta conta = recuperarPorNumero(numero);
 		Operacao operacaoClass = new Operacao();
 		switch (operacao) {
 		case "debito":
-			operacaoClass.setTipo(operacao);
+			operacaoClass.setTipo(TipoOperacao.valueOf(operacao.toUpperCase()));
 			operacaoClass.setValor(valor);
 			return operacaoService.debito(conta, operacaoClass);
 		case "credito":
-			operacaoClass.setTipo(operacao);
+			operacaoClass.setTipo(TipoOperacao.valueOf(operacao.toUpperCase()));
 			operacaoClass.setValor(valor);
 			return operacaoService.credito(conta, operacaoClass);
 		default:

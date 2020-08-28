@@ -1,9 +1,11 @@
 package org.serratec.backend2.trabalho.banco.controller;
 
 import org.serratec.backend2.trabalho.banco.exceptions.AccountNotFoundException;
+import org.serratec.backend2.trabalho.banco.exceptions.DuplicateAccountException;
 import org.serratec.backend2.trabalho.banco.exceptions.InsufficientFundsException;
 import org.serratec.backend2.trabalho.banco.exceptions.InvalidNumberException;
 import org.serratec.backend2.trabalho.banco.exceptions.NotAllowedCreditException;
+import org.serratec.backend2.trabalho.banco.exceptions.NotAlowedValueException;
 import org.serratec.backend2.trabalho.banco.exceptions.OperationNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +54,19 @@ public class ExceptionController {
 				.header("x-operationnotfound-code", "OPERATION_NOT_FOUND")
 				.header("x-operationnotfound-value", exception.getOperacao()).build();
 	}
+	
+	@ExceptionHandler(NotAlowedValueException.class)
+	public ResponseEntity<String> tratarOperationNotFoundException(NotAlowedValueException exception) {
+		return ResponseEntity.badRequest()
+				.header("x-operationnotfound-msg", exception.getMsg())
+				.header("x-operationnotfound-code", "OPERATION_NOT_FOUND").build();
+	}
+	@ExceptionHandler(DuplicateAccountException.class)
+	public ResponseEntity<String> tratarOperationNotFoundException(DuplicateAccountException exception) {
+		return ResponseEntity.badRequest()
+				.header("x-operationnotfound-msg", exception.getMsg())
+				.header("x-operationnotfound-code", "DUPLICATE_ACCOUNT").build();
+	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> tratarGenericException(Exception exception) {
@@ -60,6 +75,7 @@ public class ExceptionController {
 				.header("x-generic-msg", msg)
 				.header("x-generic-code", exception.getMessage()).build();
 	}
+	
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<String> tratarNullPointerException(NullPointerException exception){
 		String msg = "ALGUM PARAMETRO OU INFORMAÇÃO ESTÁ ERRADA POR FAVOR CONFIRA A URL";
