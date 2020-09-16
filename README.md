@@ -29,3 +29,6 @@ Exemplo body: "numero": 12,<br>
 
 ### Números menores iguais ou menores que zero não serão aceitos, nos caminhos passados no caso.
 
+
+![gif java-api](https://github.com/BrGUILHERMEHenrique/serratec-conta-bancaria-java2/blob/master/api-java.gif)
+
